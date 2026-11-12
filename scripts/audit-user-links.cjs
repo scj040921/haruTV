@@ -1,0 +1,6 @@
+const fs=require('node:fs'),path=require('node:path'),ts=require('typescript');
+require.extensions['.ts']=(mod,file)=>mod._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,file);
+const {parseSubscriptionJson,parseSubscriptionPayload}=require('../src/lib/tvbox-parser.ts');
+const root=path.join(__dirname,'../output/source-audit/user-links');const rows=JSON.parse(fs.readFileSync(path.join(root,'fetch-results.json'),'utf8'));
+for(const r of rows){if(!r.file)continue;try{const json=parseSubscriptionJson(fs.readFileSync(path.join(root,r.file),'utf8'));const parsed=parseSubscriptionPayload(json);r.analysis={format:parsed.parseStats?.format||parsed.stats?.format,vod:parsed.sources?.length||0,live:parsed.liveSources?.length||0,stats:parsed.parseStats||parsed.stats};r.importable=parsed;r.fourK=(json.sites||[]).filter(s=>/4k|蓝光|原盘|HDR|杜比/i.test(s.name||'')).map(s=>({name:s.name,type:s.type,engine:s.api}));console.log(JSON.stringify({name:r.name,...r.analysis,fourK:r.fourK,keys:Object.keys(parsed)}));}catch(e){r.parseError=e.message;console.log(JSON.stringify({name:r.name,error:e.message}));}}
+fs.writeFileSync(path.join(root,'analysis.json'),JSON.stringify(rows,null,2));

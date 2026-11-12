@@ -1,0 +1,13 @@
+const {chromium}=require('playwright');
+(async()=>{
+const remote=await chromium.connectOverCDP('http://127.0.0.1:9333');const cookies=await remote.contexts()[0].cookies();
+const browser=await chromium.launch({channel:'chrome',headless:true});const ctx=await browser.newContext({viewport:{width:1360,height:900}});await ctx.addCookies(cookies);const p=await ctx.newPage();p.setDefaultTimeout(20000);const errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('http://127.0.0.1:17834/');
+const status=await p.evaluate(()=>fetch('/api/status').then(r=>r.json()));if(!status.verified||status.defaultSources.length!==2)throw Error('Preset/auth bootstrap failed');
+const results=await p.evaluate(async sources=>{const r=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({wd:'星际穿越',sources,filterAdult:true})});return r.json();},status.defaultSources);
+console.log('Search results:',results.list?.length,'failures:',results.failures?.length);if(!results.list?.length)throw Error('No search result');
+const chosen=results.list.find(i=>i.sourceKey==='env_0'&&i.name==='星际穿越')||results.list[0];await p.goto(`http://127.0.0.1:17834/watch?source=${chosen.sourceKey}&id=${chosen.vodId}&title=${encodeURIComponent(chosen.name)}`);
+await p.locator('video').waitFor();await p.locator('video').evaluate(v=>{v.muted=true;return v.play().catch(()=>{});});
+await p.waitForFunction(()=>{const v=document.querySelector('video');return v&&v.videoWidth>0&&v.currentTime>1;},null,{timeout:45000});const playback=await p.locator('video').evaluate(v=>({width:v.videoWidth,height:v.videoHeight,time:v.currentTime,paused:v.paused}));console.log('VOD decoded:',JSON.stringify(playback));await p.screenshot({path:'output/playwright/harutv-vod-playing.png'});
+await p.goto('http://127.0.0.1:17834/live');await p.getByText('河北卫视 4K',{exact:false}).first().waitFor();await p.getByText('河北卫视 4K',{exact:false}).first().click();await p.locator('video').waitFor();await p.locator('video').evaluate(v=>{v.muted=true;return v.play().catch(()=>{});});await p.waitForFunction(()=>{const v=document.querySelector('video');return v&&v.videoWidth===3840&&v.currentTime>1;},null,{timeout:45000});console.log('LIVE decoded:',JSON.stringify(await p.locator('video').evaluate(v=>({width:v.videoWidth,height:v.videoHeight,time:v.currentTime}))));await p.screenshot({path:'output/playwright/harutv-live-4k.png'});
+if(errors.length)throw Error(errors.join('\n'));await browser.close();console.log('PASS: preset import, authenticated real search, VOD decode, 4K live decode.');process.exit(0);
+})().catch(e=>{console.error(e.message);process.exit(1);});

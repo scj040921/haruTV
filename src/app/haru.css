@@ -1,0 +1,917 @@
+/* haruTV: quiet surfaces, consistent hierarchy, content first. */
+:root {
+  --c-page: 250 250 247;
+  --c-surface: 255 255 252;
+  --c-surface-raised: 255 255 252;
+  --c-card: 255 255 252;
+  --c-chip: 239 240 234;
+  --c-hover: 229 233 224;
+  --c-line: 225 228 219;
+  --c-content: 35 43 37;
+  --c-muted: 94 104 94;
+  --c-faint: 105 114 104;
+  --c-accent: 47 105 77;
+  --c-accent-hover: 35 83 59;
+  --c-on-accent: 255 255 255;
+  --sidebar: #f0f1eb;
+  --toolbar: rgba(250, 250, 247, 0.9);
+}
+.dark {
+  --c-page: 24 28 26;
+  --c-surface: 31 36 33;
+  --c-surface-raised: 38 43 39;
+  --c-card: 31 36 33;
+  --c-chip: 41 46 42;
+  --c-hover: 51 60 52;
+  --c-line: 53 61 54;
+  --c-content: 235 238 229;
+  --c-muted: 170 180 169;
+  --c-faint: 151 163 151;
+  --c-accent: 158 200 160;
+  --c-accent-hover: 187 222 186;
+  --c-on-accent: 25 44 30;
+  --sidebar: #1f2420;
+  --toolbar: rgba(24, 28, 26, 0.9);
+}
+html,
+body,
+.dark body {
+  background: rgb(var(--c-page));
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
+    "Microsoft YaHei", sans-serif;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+button,
+a,
+input,
+select {
+  touch-action: manipulation;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid rgb(var(--c-accent));
+  outline-offset: 4px;
+}
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+::selection {
+  background: rgb(var(--c-accent) / 0.25);
+}
+.haru-sidebar {
+  width: 224px;
+  position: fixed;
+  inset: 0 auto 0 0;
+  background: var(--sidebar);
+  border-right: 1px solid rgb(var(--c-line) / 0.6);
+  padding: 38px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  z-index: 45;
+}
+.haru-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin: 0 10px 47px;
+  font-size: 27px;
+  line-height: 1;
+  font-weight: 650;
+  letter-spacing: -1.4px;
+}
+.haru-brand-tv {
+  font-weight: 350;
+}
+.haru-brand small {
+  font-size: 10px;
+  display: block;
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  color: rgb(var(--c-muted));
+  margin-top: 9px;
+}
+.haru-nav-label {
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: rgb(var(--c-faint));
+  margin: 0 14px 10px;
+}
+.haru-nav-label:not(:first-of-type) {
+  margin-top: 31px;
+}
+.haru-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 13px;
+  border-radius: 9px;
+  color: rgb(var(--c-muted));
+  font-size: 13px;
+  text-align: left;
+  margin-bottom: 4px;
+  transition:
+    background 0.16s,
+    color 0.16s;
+}
+.haru-nav-item svg {
+  width: 19px;
+  height: 19px;
+}
+.haru-nav-item svg path {
+  stroke-width: 1.65;
+}
+.haru-nav-item:hover {
+  background: rgb(var(--c-hover) / 0.7);
+  color: rgb(var(--c-content));
+}
+.haru-nav-item.selected {
+  background: rgb(var(--c-accent) / 0.11);
+  color: rgb(var(--c-accent));
+  font-weight: 600;
+}
+.haru-nav-dot {
+  height: 5px;
+  width: 5px;
+  margin-left: auto;
+  background: currentColor;
+  border-radius: 50%;
+}
+.haru-nav-item kbd,
+.haru-nav-item small {
+  margin-left: auto;
+  font-size: 10px;
+  color: rgb(var(--c-faint));
+  font-weight: 400;
+}
+.haru-sidebar-bottom {
+  margin-top: auto;
+}
+.haru-source-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 16px 8px 20px;
+  margin-bottom: 9px;
+  border-bottom: 1px solid rgb(var(--c-line));
+  font-size: 10px;
+}
+.haru-source-status small {
+  display: block;
+  color: rgb(var(--c-faint));
+  font-size: 10px;
+  margin-top: 5px;
+}
+.haru-source-status > span:last-child {
+  margin-left: auto;
+  font-size: 20px;
+  color: rgb(var(--c-faint));
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #b69b6f;
+  flex-shrink: 0;
+}
+.status-dot.online {
+  background: rgb(var(--c-accent));
+}
+.haru-main {
+  margin-left: 224px;
+  min-height: 100vh;
+}
+.haru-toolbar {
+  height: 68px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  background: var(--toolbar);
+  backdrop-filter: blur(24px);
+  border-bottom: 1px solid rgb(var(--c-line) / 0.6);
+  padding: 0 32px;
+  z-index: 40;
+}
+.haru-toolbar.desktop {
+  -webkit-app-region: drag;
+}
+.haru-toolbar button,
+.haru-toolbar a,
+.haru-toolbar form {
+  -webkit-app-region: no-drag;
+}
+.haru-toolbar-title {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.haru-toolbar-title button {
+  font-size: 27px;
+  font-weight: 300;
+  color: rgb(var(--c-muted));
+  width: 26px;
+}
+.haru-toolbar-search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  border-radius: 8px;
+  padding: 7px 10px;
+  background: rgb(var(--c-chip) / 0.7);
+  width: 260px;
+  border: 1px solid rgb(var(--c-line) / 0.5);
+}
+.haru-toolbar-search svg {
+  width: 15px;
+  height: 15px;
+  color: rgb(var(--c-faint));
+}
+.haru-toolbar-search input {
+  width: 100%;
+  min-width: 0;
+  outline: none;
+  background: transparent;
+  font-size: 12px;
+}
+.haru-toolbar-search kbd {
+  font-size: 9px;
+  white-space: nowrap;
+  color: rgb(var(--c-faint));
+}
+.haru-window-actions {
+  display: flex;
+  align-self: stretch;
+  margin-right: -32px;
+  margin-left: 0;
+}
+.haru-window-actions button {
+  width: 43px;
+  font-size: 17px;
+}
+.haru-window-actions button:hover {
+  background: rgb(var(--c-hover));
+}
+.haru-window-actions button:last-child:hover {
+  background: #bb3737;
+  color: #fff;
+}
+.haru-content > div.min-h-screen {
+  min-height: calc(100vh - 68px);
+}
+.haru-content > div > main {
+  max-width: 1400px;
+  padding: 32px 40px 40px;
+}
+.haru-content .sticky.top-0 {
+  top: 68px;
+}
+.haru-hero {
+  position: relative;
+  min-height: 338px;
+  border-radius: 17px;
+  overflow: hidden;
+  isolation: isolate;
+  margin-bottom: 30px;
+  background: #48634f;
+  color: #fff;
+}
+.haru-landscape {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+}
+.haru-hero-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(20, 44, 33, 0.83),
+    rgba(26, 49, 37, 0.33) 52%,
+    transparent 83%
+  );
+  z-index: -1;
+}
+.haru-hero-copy {
+  padding: 36px 38px;
+}
+.haru-eyebrow {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 2.2px;
+  color: rgb(var(--c-faint));
+  margin: 0 0 12px;
+}
+.haru-hero .haru-eyebrow {
+  color: #e3e6cf;
+  font-size: 9px;
+}
+.haru-hero h2 {
+  font-size: 39px;
+  font-weight: 550;
+  line-height: 1.45;
+  letter-spacing: 3px;
+  margin: 14px 0 13px;
+}
+.haru-hero-copy > p:not(.haru-eyebrow) {
+  font-size: 12px;
+  color: #e2e6dc;
+  letter-spacing: 1px;
+}
+.haru-hero-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 25px;
+  background: #eef0df;
+  color: #284332;
+  border-radius: 8px;
+  padding: 11px 20px;
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: 0 3px 12px #14281b22;
+  transition: filter 0.18s;
+}
+.haru-hero-button:hover {
+  filter: brightness(1.08);
+}
+.haru-hero-button span {
+  font-size: 17px;
+  line-height: 1;
+}
+.haru-hero-caption {
+  position: absolute;
+  right: 25px;
+  bottom: 23px;
+  font-size: 8px;
+  color: #e8e8d5;
+  letter-spacing: 2px;
+}
+.haru-onboarding {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 19px 22px;
+  border: 1px solid rgb(var(--c-line));
+  border-radius: 12px;
+  margin-bottom: 34px;
+  background: rgb(var(--c-surface));
+  transition: border-color 0.18s;
+}
+.haru-onboarding:hover {
+  border-color: rgb(var(--c-accent) / 0.5);
+}
+.haru-onboarding-symbol {
+  font-size: 24px;
+  border-radius: 11px;
+  width: 43px;
+  height: 43px;
+  display: grid;
+  place-items: center;
+  background: rgb(var(--c-accent) / 0.08);
+  color: rgb(var(--c-accent));
+}
+.haru-onboarding h2 {
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+.haru-onboarding p {
+  font-size: 11px;
+  color: rgb(var(--c-muted));
+}
+.haru-onboarding-action {
+  margin-left: auto;
+  white-space: nowrap;
+  font-size: 11px;
+  color: rgb(var(--c-accent));
+}
+.haru-onboarding-action b {
+  margin-left: 13px;
+  font-size: 16px;
+}
+.haru-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 17px;
+}
+.haru-section-heading h1,
+.haru-section-heading h2 {
+  font-size: 21px;
+  font-weight: 600;
+  letter-spacing: -0.4px;
+}
+.haru-section-heading .haru-eyebrow {
+  font-size: 8px;
+  margin-bottom: 6px;
+}
+.haru-key-hint {
+  color: rgb(var(--c-faint));
+  font-size: 10px;
+}
+.haru-search-section {
+  margin-bottom: 34px;
+}
+.haru-search-section .min-h-12 {
+  min-height: 49px;
+  background: rgb(var(--c-surface));
+  border-radius: 10px;
+  border-color: rgb(var(--c-line));
+}
+.haru-search-section .btn-primary {
+  padding-left: 24px;
+  padding-right: 24px;
+  font-size: 12px;
+}
+.haru-search-section input {
+  font-size: 12px;
+}
+.haru-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 40px;
+  color: rgb(var(--c-faint));
+  font-size: 9px;
+  border-top: 1px solid rgb(var(--c-line) / 0.6);
+  gap: 20px;
+}
+.brand-gradient {
+  background: none;
+  color: rgb(var(--c-accent));
+  -webkit-text-fill-color: currentColor;
+}
+.card {
+  border-radius: 12px;
+  border-color: rgb(var(--c-line) / 0.65);
+  box-shadow: none;
+}
+.card:hover {
+  box-shadow: 0 8px 24px #1223160b;
+  transform: translateY(-2px);
+}
+.btn {
+  border-radius: 8px;
+  min-height: 34px;
+}
+.btn-sm {
+  min-height: 29px;
+}
+.input {
+  border-radius: 8px;
+  background: rgb(var(--c-surface));
+}
+.chip {
+  border-radius: 7px;
+}
+.haru-content section[aria-label$="推荐"] > .grid {
+  gap: 18px;
+}
+.haru-content section[aria-label$="推荐"] .card {
+  background: none;
+  border: none;
+  overflow: visible;
+}
+.haru-content section[aria-label$="推荐"] .card > div:first-child {
+  border-radius: 10px;
+  overflow: hidden;
+}
+.haru-content section[aria-label$="推荐"] .card > div:last-child {
+  padding: 11px 1px;
+}
+.haru-content section[aria-label$="推荐"] .card > div:last-child > div {
+  font-size: 12px;
+}
+.haru-content section[aria-label$="推荐"] .card:hover {
+  box-shadow: none;
+}
+.haru-page {
+  max-width: 1240px;
+  margin: auto;
+  padding: 40px;
+}
+.haru-page > h1 {
+  font-size: 30px;
+  font-weight: 650;
+  letter-spacing: -1px;
+}
+.haru-page-description {
+  color: rgb(var(--c-muted));
+  font-size: 12px;
+  margin-top: 11px;
+  margin-bottom: 32px;
+}
+.haru-appearance {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px 26px;
+  border: 1px solid rgb(var(--c-line));
+  border-radius: 13px;
+  background: rgb(var(--c-surface));
+  margin-bottom: 26px;
+}
+.haru-appearance h2 {
+  font-size: 14px;
+  font-weight: 600;
+}
+.haru-appearance p {
+  font-size: 11px;
+  color: rgb(var(--c-muted));
+  margin-top: 5px;
+}
+.haru-appearance [role="group"] {
+  display: flex;
+  gap: 3px;
+  background: rgb(var(--c-chip));
+  padding: 4px;
+  border-radius: 9px;
+}
+.haru-appearance button {
+  padding: 8px 17px;
+  border-radius: 6px;
+  font-size: 11px;
+}
+.haru-appearance button[aria-pressed="true"] {
+  background: rgb(var(--c-surface));
+  box-shadow: 0 1px 4px #0001;
+  color: rgb(var(--c-accent));
+}
+.haru-settings-pane {
+  border: 1px solid rgb(var(--c-line));
+  border-radius: 13px;
+  overflow: hidden;
+  background: rgb(var(--c-surface));
+}
+.haru-settings-tabs {
+  padding: 20px 24px;
+  background: rgb(var(--c-chip) / 0.25);
+  border-bottom: 1px solid rgb(var(--c-line));
+}
+.haru-settings-body {
+  padding: 28px;
+  min-height: 340px;
+}
+.haru-settings-tabs [role="tab"] {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: 12px;
+}
+.haru-settings-body .border-dashed {
+  border-style: solid;
+  background: rgb(var(--c-chip) / 0.2);
+  border-radius: 12px;
+}
+.haru-library-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(var(--c-line));
+  padding-bottom: 18px;
+  font-size: 12px;
+  color: rgb(var(--c-muted));
+  margin-bottom: 26px;
+}
+.haru-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 90px 25px;
+  color: rgb(var(--c-faint));
+}
+.haru-empty svg {
+  stroke-width: 1;
+  margin-bottom: 24px;
+}
+.haru-empty h2 {
+  font-size: 20px;
+  font-weight: 550;
+  color: rgb(var(--c-content));
+}
+.haru-empty p {
+  font-size: 12px;
+  margin: 12px 0 26px;
+}
+.haru-empty a {
+  font-size: 12px;
+  padding: 10px 22px;
+}
+.haru-library-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+}
+.haru-library-card {
+  position: relative;
+}
+.haru-library-poster {
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: rgb(var(--c-chip));
+  border-radius: 11px;
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+.haru-resume-label {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 20px 14px 12px;
+  background: linear-gradient(transparent, #0009);
+  color: #fff;
+  font-size: 11px;
+}
+.haru-library-card h2 {
+  font-size: 13px;
+  font-weight: 550;
+  margin-top: 12px;
+}
+.haru-library-card p {
+  font-size: 10px;
+  color: rgb(var(--c-faint));
+  margin: 7px 0;
+}
+.haru-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  padding: 5px;
+  background: #0008;
+  color: #fff;
+  border-radius: 6px;
+}
+progress {
+  appearance: none;
+  height: 3px;
+  width: 100%;
+  border: 0;
+  border-radius: 3px;
+  overflow: hidden;
+}
+progress::-webkit-progress-bar {
+  background: rgb(var(--c-chip));
+}
+progress::-webkit-progress-value {
+  background: rgb(var(--c-accent));
+}
+.haru-continue {
+  margin: 30px 0;
+}
+.haru-continue .haru-section-heading a {
+  font-size: 11px;
+  color: rgb(var(--c-accent));
+}
+.haru-continue-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 17px;
+}
+.haru-resume-card > div {
+  aspect-ratio: 16/9;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  background: rgb(var(--c-chip));
+}
+.haru-resume-card > div > span {
+  position: absolute;
+  bottom: 8px;
+  left: 10px;
+  color: #fff;
+  filter: drop-shadow(0 1px 3px #000);
+}
+.haru-resume-card h3 {
+  font-size: 12px;
+  margin-top: 10px;
+}
+.haru-resume-card small {
+  font-size: 10px;
+  color: rgb(var(--c-faint));
+  display: block;
+  margin: 5px 0;
+}
+.haru-watching {
+  background: rgb(var(--c-page));
+}
+@media (min-width: 1600px) {
+  .haru-sidebar {
+    width: 240px;
+  }
+  .haru-main {
+    margin-left: 240px;
+  }
+  .haru-hero {
+    min-height: 390px;
+  }
+  .haru-hero-copy {
+    padding: 48px;
+  }
+  .haru-hero h2 {
+    font-size: 46px;
+  }
+}
+@media (max-width: 1050px) {
+  .haru-sidebar {
+    width: 190px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .haru-main {
+    margin-left: 190px;
+  }
+  .haru-content > div > main,
+  .haru-page {
+    padding: 25px;
+  }
+  .haru-toolbar {
+    padding: 0 22px;
+  }
+  .haru-toolbar-search {
+    width: 200px;
+  }
+  .haru-brand {
+    font-size: 24px;
+  }
+  .haru-library-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .haru-window-actions {
+    margin-right: -22px;
+  }
+  .haru-toolbar {
+    gap: 10px;
+  }
+  .haru-hero h2 {
+    font-size: 34px;
+  }
+}
+@media (max-width: 700px) {
+  .haru-sidebar {
+    width: 70px;
+    padding: 24px 8px;
+  }
+  .haru-main {
+    margin-left: 70px;
+  }
+  .haru-brand {
+    margin: 0 auto 35px;
+    justify-content: center;
+  }
+  .haru-brand > span,
+  .haru-nav-label,
+  .haru-nav-item > span,
+  .haru-nav-item small,
+  .haru-nav-item kbd,
+  .haru-source-status {
+    display: none;
+  }
+  .haru-nav-item {
+    justify-content: center;
+    padding: 13px 8px;
+  }
+  .haru-toolbar-title > span {
+    display: none;
+  }
+  .haru-toolbar {
+    padding: 0 14px;
+    height: 58px;
+    gap: 8px;
+  }
+  .haru-toolbar-search {
+    width: auto;
+    flex: 1;
+  }
+  .haru-toolbar-search kbd {
+    display: none;
+  }
+  .haru-content > div > main,
+  .haru-page {
+    padding: 20px 16px;
+  }
+  .haru-hero {
+    min-height: 310px;
+    border-radius: 13px;
+  }
+  .haru-hero-copy {
+    padding: 30px 25px;
+  }
+  .haru-hero h2 {
+    font-size: 29px;
+  }
+  .haru-hero-caption {
+    display: none;
+  }
+  .haru-onboarding {
+    padding: 16px 12px;
+    gap: 10px;
+  }
+  .haru-onboarding-action {
+    font-size: 0;
+  }
+  .haru-onboarding-action b {
+    font-size: 18px;
+  }
+  .haru-onboarding p {
+    font-size: 10px;
+    line-height: 1.7;
+  }
+  .haru-onboarding-symbol {
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+  }
+  .haru-key-hint {
+    display: none;
+  }
+  .haru-section-heading h1 {
+    font-size: 18px;
+  }
+  .haru-appearance {
+    padding: 17px;
+    align-items: start;
+    gap: 15px;
+    flex-direction: column;
+  }
+  .haru-settings-body {
+    padding: 18px;
+  }
+  .haru-settings-tabs {
+    padding: 14px;
+  }
+  .haru-library-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .haru-continue-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .haru-footer {
+    padding: 18px;
+    font-size: 8px;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .haru-window-actions {
+    margin-right: -14px;
+  }
+  .haru-window-actions button {
+    width: 30px;
+  }
+  .haru-library-toolbar input {
+    max-width: 150px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .card:hover {
+    transform: none;
+  }
+}
+
+[data-recommendation-grid] {
+  grid-template-columns: repeat(auto-fill, minmax(142px, 1fr)) !important;
+  gap: 20px !important;
+}
+.haru-hero-copy > p:not(.haru-eyebrow) {
+  font-size: 13px;
+}
+.haru-onboarding p {
+  font-size: 12px;
+}
+.haru-search-section input {
+  font-size: 14px;
+}
+.haru-footer {
+  font-size: 11px;
+}
+.haru-settings-body [role="button"] {
+  font-size: 13px;
+}
+
+.haru-content section[aria-label$="推荐"] > .grid {
+  grid-template-columns: repeat(auto-fill, minmax(142px, 1fr));
+  gap: 20px;
+}

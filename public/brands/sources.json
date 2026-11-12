@@ -1,0 +1,50 @@
+[
+  {
+    "brand": "netflix",
+    "file": "netflix.svg",
+    "source": "https://commons.wikimedia.org/wiki/File:Netflix_2015_logo.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
+  },
+  {
+    "brand": "hbo",
+    "file": "hbo.svg",
+    "source": "https://commons.wikimedia.org/wiki/File:HBO_logo.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/d/de/HBO_logo.svg"
+  },
+  {
+    "brand": "apple",
+    "file": "apple.svg",
+    "source": "https://commons.wikimedia.org/wiki/File:Apple_TV_Plus_Logo.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/2/28/Apple_TV_Plus_Logo.svg"
+  },
+  {
+    "brand": "bbc",
+    "file": "bbc.svg",
+    "source": "https://commons.wikimedia.org/wiki/File:BBC_Logo_2021.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/4/41/BBC_Logo_2021.svg"
+  },
+  {
+    "brand": "ghibli",
+    "file": "ghibli.svg",
+    "source": "https://commons.wikimedia.org/wiki/File:Studio_Ghibli_wordmark.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/9/92/Studio_Ghibli_wordmark.svg"
+  },
+  {
+    "brand": "marvel",
+    "file": "marvel.svg",
+    "source": "https://commons.wikimedia.org/wiki/File:Marvel_Studios_logo.svg",
+    "download": "https://upload.wikimedia.org/wikipedia/commons/6/63/Marvel_Studios_logo.svg"
+  },
+  {
+    "brand": "a24",
+    "file": "a24.svg",
+    "source": "https://a24films.com/",
+    "note": "Original inline header logo; paths preserved."
+  },
+  {
+    "brand": "pixar",
+    "file": "pixar.png",
+    "source": "https://www.pixar.com/",
+    "download": "https://images.squarespace-cdn.com/content/v1/60241cb68df65b530cd84d95/1613495438818-408JDVSTB7NWSHVC20M7/logo.png"
+  }
+]

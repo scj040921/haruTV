@@ -1,0 +1,22 @@
+{
+  "checkedAt": "2026-11-13",
+  "sources": [
+    {
+      "name": "魔都资源",
+      "url": "https://www.mdzyapi.com/api.php/provide/vod",
+      "isAdult": false
+    },
+    {
+      "name": "非凡资源",
+      "url": "https://cj.ffzyapi.com/api.php/provide/vod",
+      "isAdult": false
+    }
+  ],
+  "liveSources": [
+    {
+      "name": "4K 电视 · 河北 / 湖南 / 苏州",
+      "url": "https://gist.githubusercontent.com/yifanwang-yet/c2c9263066c0c5d20f50ce9b31d40e7e/raw/libretv-4k.m3u",
+      "epg": "https://live.zbds.top/tv/epg.xml.gz"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+node_modules/
+.next/
+out/
+.env
+.env*.local
+*.tsbuildinfo
+vitest-results.json
+*.log
+
+# AI 工具产物（本机会话/缓存数据，不入库）
+.mimosa/
+.zcode/
+.codebuddy/
+generated-images/
+dist/
+output/
+.desktop/
+
+.playwright-cli/
+
+# Local catalogue refresh scratch files
+src/lib/catalog/*.tmp

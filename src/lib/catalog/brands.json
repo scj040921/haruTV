@@ -1,0 +1,1047 @@
+{
+  "updatedAt": "2026-11-13",
+  "brands": [
+    {
+      "id": "netflix",
+      "name": "Netflix",
+      "description": "全球故事，跨越语言",
+      "note": "原创与首播作品精选",
+      "items": [
+        {
+          "id": "26359270",
+          "title": "怪奇物语 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2364206200.jpg",
+          "rating": 9.1,
+          "year": "2016",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "科幻",
+            "悬疑",
+            "惊悚",
+            "恐怖",
+            "奇幻"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2016 · 美国 · 剧情 科幻 悬疑 惊悚 恐怖 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/26359270/"
+        },
+        {
+          "id": "25850640",
+          "title": "毒枭 第一季",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2265331341.jpg",
+          "rating": 9.3,
+          "year": "2015",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "动作",
+            "传记",
+            "犯罪"
+          ],
+          "countries": [
+            "美国",
+            "哥伦比亚"
+          ],
+          "subtitle": "2015 · 美国 哥伦比亚 · 剧情 动作 传记 犯罪",
+          "sourceUrl": "https://movie.douban.com/subject/25850640/"
+        },
+        {
+          "id": "32579283",
+          "title": "后翼弃兵",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2621201524.jpg",
+          "rating": 9.0,
+          "year": "2020",
+          "kind": "tv",
+          "genres": [
+            "剧情"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2020 · 美国 · 剧情",
+          "sourceUrl": "https://movie.douban.com/subject/32579283/"
+        },
+        {
+          "id": "26427152",
+          "title": "王冠 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2384662883.jpg",
+          "rating": 9.3,
+          "year": "2016",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "历史"
+          ],
+          "countries": [
+            "美国",
+            "英国"
+          ],
+          "subtitle": "2016 · 美国 英国 · 剧情 历史",
+          "sourceUrl": "https://movie.douban.com/subject/26427152/"
+        },
+        {
+          "id": "34812928",
+          "title": "鱿鱼游戏 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2677934359.jpg",
+          "rating": 7.7,
+          "year": "2021",
+          "kind": "tv",
+          "genres": [
+            "悬疑",
+            "惊悚"
+          ],
+          "countries": [
+            "韩国"
+          ],
+          "subtitle": "2021 · 韩国 · 悬疑 惊悚",
+          "sourceUrl": "https://movie.douban.com/subject/34812928/"
+        },
+        {
+          "id": "30424374",
+          "title": "爱，死亡和机器人 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2551717438.jpg",
+          "rating": 9.2,
+          "year": "2019",
+          "kind": "tv",
+          "genres": [
+            "喜剧",
+            "科幻",
+            "动画"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2019 · 美国 · 喜剧 科幻 动画 恐怖 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/30424374/"
+        },
+        {
+          "id": "35364243",
+          "title": "星期三 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2881559729.jpg",
+          "rating": 7.8,
+          "year": "2022",
+          "kind": "tv",
+          "genres": [
+            "喜剧",
+            "悬疑",
+            "犯罪"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2022 · 美国 · 喜剧 悬疑 犯罪 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/35364243/"
+        }
+      ]
+    },
+    {
+      "id": "hbo",
+      "name": "HBO",
+      "description": "让好故事留下回响",
+      "note": "HBO 出品与首播作品精选",
+      "items": [
+        {
+          "id": "3016187",
+          "title": "权力的游戏 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p896064368.jpg",
+          "rating": 9.5,
+          "year": "2011",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国",
+            "英国"
+          ],
+          "subtitle": "2011 · 美国 英国 · 剧情 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/3016187/"
+        },
+        {
+          "id": "10748120",
+          "title": "真探 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2161543367.jpg",
+          "rating": 9.2,
+          "year": "2014",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "悬疑",
+            "犯罪"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2014 · 美国 · 剧情 悬疑 犯罪",
+          "sourceUrl": "https://movie.douban.com/subject/10748120/"
+        },
+        {
+          "id": "1418199",
+          "title": "火线 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p926249640.jpg",
+          "rating": 9.4,
+          "year": "2002",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "惊悚",
+            "犯罪"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2002 · 美国 · 剧情 惊悚 犯罪",
+          "sourceUrl": "https://movie.douban.com/subject/1418199/"
+        },
+        {
+          "id": "30246685",
+          "title": "继承之战 第二季",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2562172411.jpg",
+          "rating": 9.3,
+          "year": "2019",
+          "kind": "tv",
+          "genres": [
+            "剧情"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2019 · 美国 · 剧情",
+          "sourceUrl": "https://movie.douban.com/subject/30246685/"
+        },
+        {
+          "id": "1307847",
+          "title": "兄弟连",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p1714777727.jpg",
+          "rating": 9.6,
+          "year": "2001",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "动作",
+            "历史",
+            "战争"
+          ],
+          "countries": [
+            "美国",
+            "英国"
+          ],
+          "subtitle": "2001 · 美国 英国 · 剧情 动作 历史 战争",
+          "sourceUrl": "https://movie.douban.com/subject/1307847/"
+        },
+        {
+          "id": "25848328",
+          "title": "最后生还者 第一季",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2884221114.jpg",
+          "rating": 9.0,
+          "year": "2023",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "动作",
+            "科幻",
+            "惊悚",
+            "恐怖",
+            "冒险"
+          ],
+          "countries": [
+            "美国",
+            "加拿大"
+          ],
+          "subtitle": "2023 · 美国 加拿大 · 剧情 动作 科幻 惊悚 恐怖 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/25848328/"
+        }
+      ]
+    },
+    {
+      "id": "apple",
+      "name": "Apple TV+",
+      "description": "想象力，从这里延伸",
+      "note": "Apple 原创剧集精选",
+      "items": [
+        {
+          "id": "36689816",
+          "title": "流人 第六季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2935061677.jpg",
+          "rating": 7.2,
+          "year": "2026",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "惊悚"
+          ],
+          "countries": [
+            "英国",
+            "美国"
+          ],
+          "subtitle": "2026 · 英国 美国 · 剧情 惊悚",
+          "sourceUrl": "https://movie.douban.com/subject/36689816/"
+        },
+        {
+          "id": "36156271",
+          "title": "片厂风云 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2919141958.jpg",
+          "rating": 8.8,
+          "year": "2025",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "喜剧"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2025 · 美国 · 剧情 喜剧",
+          "sourceUrl": "https://movie.douban.com/subject/36156271/"
+        },
+        {
+          "id": "35468745",
+          "title": "末日地堡 第一季",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2891167234.jpg",
+          "rating": 7.8,
+          "year": "2023",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "科幻"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2023 · 美国 · 剧情 科幻",
+          "sourceUrl": "https://movie.douban.com/subject/35468745/"
+        },
+        {
+          "id": "34885342",
+          "title": "人生切割术 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2870952920.jpg",
+          "rating": 9.0,
+          "year": "2022",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "科幻",
+            "悬疑"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2022 · 美国 · 剧情 科幻 悬疑 惊悚",
+          "sourceUrl": "https://movie.douban.com/subject/34885342/"
+        }
+      ]
+    },
+    {
+      "id": "bbc",
+      "name": "BBC",
+      "description": "世界很大，值得探索",
+      "note": "BBC 出品与首播作品精选",
+      "items": [
+        {
+          "id": "1871906",
+          "title": "地球脉动 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2155172952.jpg",
+          "rating": 9.7,
+          "year": "2006",
+          "kind": "tv",
+          "genres": [
+            "纪录片"
+          ],
+          "countries": [
+            "英国"
+          ],
+          "subtitle": "2006 · 英国 · 纪录片",
+          "sourceUrl": "https://movie.douban.com/subject/1871906/"
+        },
+        {
+          "id": "1325007",
+          "title": "蓝色星球 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2574122772.jpg",
+          "rating": 9.6,
+          "year": "2001",
+          "kind": "tv",
+          "genres": [
+            "纪录片"
+          ],
+          "countries": [
+            "英国"
+          ],
+          "subtitle": "2001 · 英国 · 纪录片",
+          "sourceUrl": "https://movie.douban.com/subject/1325007/"
+        },
+        {
+          "id": "6886533",
+          "title": "冰冻星球 第一季",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2608459824.jpg",
+          "rating": 9.7,
+          "year": "2011",
+          "kind": "tv",
+          "genres": [
+            "纪录片"
+          ],
+          "countries": [
+            "英国"
+          ],
+          "subtitle": "2011 · 英国 · 纪录片",
+          "sourceUrl": "https://movie.douban.com/subject/6886533/"
+        },
+        {
+          "id": "4135259",
+          "title": "生命",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p1506791425.jpg",
+          "rating": 9.6,
+          "year": "2009",
+          "kind": "tv",
+          "genres": [
+            "纪录片"
+          ],
+          "countries": [
+            "英国",
+            "希腊"
+          ],
+          "subtitle": "2009 · 英国 希腊 · 纪录片",
+          "sourceUrl": "https://movie.douban.com/subject/4135259/"
+        },
+        {
+          "id": "3986493",
+          "title": "神探夏洛克 第一季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p1461954452.jpg",
+          "rating": 9.5,
+          "year": "2010",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "悬疑",
+            "犯罪"
+          ],
+          "countries": [
+            "英国"
+          ],
+          "subtitle": "2010 · 英国 · 剧情 悬疑 犯罪",
+          "sourceUrl": "https://movie.douban.com/subject/3986493/"
+        },
+        {
+          "id": "3634228",
+          "title": "神秘博士  第二季",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2496683588.jpg",
+          "rating": 9.5,
+          "year": "2006",
+          "kind": "tv",
+          "genres": [
+            "剧情",
+            "科幻",
+            "冒险"
+          ],
+          "countries": [
+            "英国"
+          ],
+          "subtitle": "2006 · 英国 · 剧情 科幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/3634228/"
+        },
+        {
+          "id": "5950117",
+          "title": "人类星球",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2900050434.jpg",
+          "rating": 9.7,
+          "year": "2011",
+          "kind": "tv",
+          "genres": [
+            "纪录片"
+          ],
+          "countries": [
+            "英国"
+          ],
+          "subtitle": "2011 · 英国 · 纪录片",
+          "sourceUrl": "https://movie.douban.com/subject/5950117/"
+        }
+      ]
+    },
+    {
+      "id": "a24",
+      "name": "A24",
+      "description": "银幕之外，余味很长",
+      "note": "A24 出品或发行电影精选",
+      "items": [
+        {
+          "id": "30314848",
+          "title": "瞬息全宇宙",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2869765076.jpg",
+          "rating": 7.5,
+          "year": "2022",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2022 · 美国 · 喜剧 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/30314848/"
+        },
+        {
+          "id": "26648249",
+          "title": "月光男孩",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2373594741.jpg",
+          "rating": 7.4,
+          "year": "2016",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "同性"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2016 · 美国 · 剧情 同性",
+          "sourceUrl": "https://movie.douban.com/subject/26648249/"
+        },
+        {
+          "id": "4160540",
+          "title": "机械姬",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2208934451.jpg",
+          "rating": 7.6,
+          "year": "2014",
+          "kind": "movie",
+          "genres": [
+            "科幻",
+            "悬疑",
+            "惊悚"
+          ],
+          "countries": [
+            "英国",
+            "美国"
+          ],
+          "subtitle": "2014 · 英国 美国 · 科幻 悬疑 惊悚",
+          "sourceUrl": "https://movie.douban.com/subject/4160540/"
+        },
+        {
+          "id": "25724855",
+          "title": "房间",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2259715855.jpg",
+          "rating": 8.7,
+          "year": "2015",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "家庭"
+          ],
+          "countries": [
+            "爱尔兰",
+            "加拿大",
+            "英国",
+            "美国"
+          ],
+          "subtitle": "2015 · 爱尔兰 加拿大 英国 美国 · 剧情 家庭",
+          "sourceUrl": "https://movie.douban.com/subject/25724855/"
+        },
+        {
+          "id": "26778790",
+          "title": "佛罗里达乐园",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2496148493.jpg",
+          "rating": 8.1,
+          "year": "2017",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "儿童"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2017 · 美国 · 剧情 儿童",
+          "sourceUrl": "https://movie.douban.com/subject/26778790/"
+        },
+        {
+          "id": "34463995",
+          "title": "米纳里",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2634084411.jpg",
+          "rating": 7.3,
+          "year": "2020",
+          "kind": "movie",
+          "genres": [
+            "剧情"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2020 · 美国 · 剧情",
+          "sourceUrl": "https://movie.douban.com/subject/34463995/"
+        },
+        {
+          "id": "34963356",
+          "title": "过往人生",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2926709157.jpg",
+          "rating": 7.7,
+          "year": "2023",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "爱情"
+          ],
+          "countries": [
+            "美国",
+            "韩国"
+          ],
+          "subtitle": "2023 · 美国 韩国 · 剧情 爱情",
+          "sourceUrl": "https://movie.douban.com/subject/34963356/"
+        }
+      ]
+    },
+    {
+      "id": "ghibli",
+      "name": "吉卜力",
+      "description": "走进温柔而奇妙的世界",
+      "note": "吉卜力工作室长片精选",
+      "items": [
+        {
+          "id": "1291561",
+          "title": "千与千寻",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2557573348.jpg",
+          "rating": 9.4,
+          "year": "2001",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "动画",
+            "奇幻"
+          ],
+          "countries": [
+            "日本"
+          ],
+          "subtitle": "2001 · 日本 · 剧情 动画 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/1291561/"
+        },
+        {
+          "id": "1291560",
+          "title": "龙猫",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2540924496.jpg",
+          "rating": 9.2,
+          "year": "1988",
+          "kind": "movie",
+          "genres": [
+            "动画",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "日本"
+          ],
+          "subtitle": "1988 · 日本 · 动画 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1291560/"
+        },
+        {
+          "id": "1291838",
+          "title": "红猪",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2899263477.jpg",
+          "rating": 8.6,
+          "year": "1992",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "冒险"
+          ],
+          "countries": [
+            "日本"
+          ],
+          "subtitle": "1992 · 日本 · 喜剧 动画 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1291838/"
+        },
+        {
+          "id": "1959877",
+          "title": "崖上的波妞",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2627847859.jpg",
+          "rating": 8.6,
+          "year": "2008",
+          "kind": "movie",
+          "genres": [
+            "动画",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "日本"
+          ],
+          "subtitle": "2008 · 日本 · 动画 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1959877/"
+        }
+      ]
+    },
+    {
+      "id": "pixar",
+      "name": "皮克斯",
+      "description": "给每个大人，留一点童心",
+      "note": "皮克斯动画电影精选",
+      "items": [
+        {
+          "id": "1291575",
+          "title": "玩具总动员",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2565956404.jpg",
+          "rating": 8.6,
+          "year": "1995",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "家庭"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "1995 · 美国 · 喜剧 动画 家庭",
+          "sourceUrl": "https://movie.douban.com/subject/1291575/"
+        },
+        {
+          "id": "2131459",
+          "title": "机器人总动员",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2934742160.jpg",
+          "rating": 9.3,
+          "year": "2008",
+          "kind": "movie",
+          "genres": [
+            "科幻",
+            "动画",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2008 · 美国 · 科幻 动画 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/2131459/"
+        },
+        {
+          "id": "2129039",
+          "title": "飞屋环游记",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p485887754.jpg",
+          "rating": 9.1,
+          "year": "2009",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "喜剧",
+            "动画",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2009 · 美国 · 剧情 喜剧 动画 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/2129039/"
+        },
+        {
+          "id": "20495023",
+          "title": "寻梦环游记",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2505426431.jpg",
+          "rating": 9.1,
+          "year": "2017",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "音乐",
+            "奇幻"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2017 · 美国 · 喜剧 动画 音乐 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/20495023/"
+        },
+        {
+          "id": "10533913",
+          "title": "头脑特工队",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2874927470.jpg",
+          "rating": 8.9,
+          "year": "2015",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2015 · 美国 · 喜剧 动画 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/10533913/"
+        },
+        {
+          "id": "24733428",
+          "title": "心灵奇旅",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2595591069.jpg",
+          "rating": 8.7,
+          "year": "2020",
+          "kind": "movie",
+          "genres": [
+            "动画",
+            "音乐",
+            "奇幻"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2020 · 美国 · 动画 音乐 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/24733428/"
+        },
+        {
+          "id": "1291579",
+          "title": "怪兽电力公司",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2513247938.jpg",
+          "rating": 8.8,
+          "year": "2001",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "儿童",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2001 · 美国 · 喜剧 动画 儿童 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1291579/"
+        },
+        {
+          "id": "1291586",
+          "title": "海底总动员",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p1755893801.jpg",
+          "rating": 8.5,
+          "year": "2003",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "冒险"
+          ],
+          "countries": [
+            "美国",
+            "澳大利亚"
+          ],
+          "subtitle": "2003 · 美国 澳大利亚 · 喜剧 动画 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1291586/"
+        },
+        {
+          "id": "1291577",
+          "title": "超人总动员",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2167017148.jpg",
+          "rating": 8.2,
+          "year": "2004",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动作",
+            "动画",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2004 · 美国 · 喜剧 动作 动画 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1291577/"
+        },
+        {
+          "id": "1793491",
+          "title": "美食总动员",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p1803013091.jpg",
+          "rating": 8.6,
+          "year": "2007",
+          "kind": "movie",
+          "genres": [
+            "喜剧",
+            "动画",
+            "奇幻"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2007 · 美国 · 喜剧 动画 奇幻",
+          "sourceUrl": "https://movie.douban.com/subject/1793491/"
+        }
+      ]
+    },
+    {
+      "id": "marvel",
+      "name": "漫威影业",
+      "description": "英雄相遇，宇宙展开",
+      "note": "漫威电影宇宙电影精选",
+      "items": [
+        {
+          "id": "1432146",
+          "title": "钢铁侠",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2196695849.jpg",
+          "rating": 8.4,
+          "year": "2008",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻",
+            "惊悚",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2008 · 美国 · 动作 科幻 惊悚 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1432146/"
+        },
+        {
+          "id": "1866479",
+          "title": "复仇者联盟",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p1469137689.jpg",
+          "rating": 8.3,
+          "year": "2012",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2012 · 美国 · 动作 科幻 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/1866479/"
+        },
+        {
+          "id": "25820460",
+          "title": "美国队长3",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2324472359.jpg",
+          "rating": 7.9,
+          "year": "2016",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2016 · 美国 · 动作 科幻",
+          "sourceUrl": "https://movie.douban.com/subject/25820460/"
+        },
+        {
+          "id": "24773958",
+          "title": "复仇者联盟3：无限战争",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2516481762.jpg",
+          "rating": 8.1,
+          "year": "2018",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2018 · 美国 · 动作 科幻 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/24773958/"
+        },
+        {
+          "id": "26100958",
+          "title": "复仇者联盟4：终局之战",
+          "cover": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2935257489.jpg",
+          "rating": 8.5,
+          "year": "2019",
+          "kind": "movie",
+          "genres": [
+            "剧情",
+            "动作",
+            "科幻",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2019 · 美国 · 剧情 动作 科幻 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/26100958/"
+        },
+        {
+          "id": "7065154",
+          "title": "银河护卫队",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2183582386.jpg",
+          "rating": 8.1,
+          "year": "2014",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2014 · 美国 · 动作 科幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/7065154/"
+        },
+        {
+          "id": "3025375",
+          "title": "奇异博士",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2368783674.jpg",
+          "rating": 7.6,
+          "year": "2016",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "奇幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2016 · 美国 · 动作 奇幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/3025375/"
+        },
+        {
+          "id": "6390825",
+          "title": "黑豹",
+          "cover": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2512123434.jpg",
+          "rating": 6.5,
+          "year": "2018",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国",
+            "南非"
+          ],
+          "subtitle": "2018 · 美国 南非 · 动作 科幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/6390825/"
+        },
+        {
+          "id": "25937854",
+          "title": "银河护卫队2",
+          "cover": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p2440935591.jpg",
+          "rating": 8.0,
+          "year": "2017",
+          "kind": "movie",
+          "genres": [
+            "动作",
+            "科幻",
+            "冒险"
+          ],
+          "countries": [
+            "美国"
+          ],
+          "subtitle": "2017 · 美国 · 动作 科幻 冒险",
+          "sourceUrl": "https://movie.douban.com/subject/25937854/"
+        }
+      ]
+    }
+  ]
+}
