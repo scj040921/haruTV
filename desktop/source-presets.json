@@ -10,6 +10,11 @@
       "name": "非凡资源",
       "url": "https://cj.ffzyapi.com/api.php/provide/vod",
       "isAdult": false
+    },
+    {
+      "name": "LIBVIO · 网页点播",
+      "url": "https://www.libvio.in",
+      "isAdult": false
     }
   ],
   "liveSources": [

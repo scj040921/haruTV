@@ -6,6 +6,7 @@
 - 分类浏览：内容类型、题材、地区、年代、评分和排序组合筛选。
 - 厂牌作品目录：4,607 条公开关系记录，Netflix、HBO、Apple TV+、BBC、A24、吉卜力、皮克斯、漫威影业，真实 Logo，支持全目录搜索与分页。
 - 聚合搜索、跨源合并、点播与直播、续播、观看记录、下载及缓存。
+- LIBVIO 桌面网页源：关键词搜索、播放页链接识别、网页线路选择与官方播放器嵌入。
 - 固定侧栏、浅色 / 深色 / 跟随系统外观、键盘操作与减少动态效果。
 
 ![haruTV 首页](docs/screenshots/home.png)
@@ -43,3 +44,11 @@ npm run desktop
 本项目采用 [AGPL-3.0-or-later](LICENSE)。代码归属、修改声明及第三方项目见 [NOTICE.md](NOTICE.md)；目录资料许可见 [DATA-LICENSE.md](DATA-LICENSE.md)；Logo 原始来源见 [public/brands/sources.json](public/brands/sources.json)。
 
 维护者可使用 `python scripts/refresh-brand-directory.py --write` 更新目录快照；脚本在数据不完整时保留现有快照，不读取任何账号凭证。
+
+## LIBVIO 网页点播
+
+桌面版预置 `LIBVIO · 网页点播`。它是独立网页适配，不是 CMS API；仅支持 `https://www.libvio.in`。可以搜索片名，也可以在搜索框粘贴该站 `/w/编号-线路-集数.html` 播放页。
+
+第一次使用会让站点在独立、隔离的网站会话中完成其正常验证；需要用户操作时显示官方页面。网站会话仅保存在本机，不导出、不随安装包或源代码公开。适配器不会点击、解算或修改验证，也不会执行远程 Spider/JAR。
+
+视频在保留真实网站来源与会话的沙盒网页播放器中播放，不伪造视频来源请求头。应用支持线路选择、选集和观看进度；网页源暂不支持应用内下载和本机跳过标记。网盘面板不导入。站点结构和可用线路可能变化，本功能为预览。

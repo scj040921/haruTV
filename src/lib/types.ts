@@ -43,6 +43,8 @@ export interface VideoInfo {
 export interface VideoDetail {
   episodes: string[];
   videoInfo: VideoInfo;
+  playLines?: { id: string; name: string }[];
+  activePlayLine?: string;
 }
 
 export interface DoubanItem {

@@ -7,6 +7,7 @@ import { Icon, type IconName } from "./icon";
 import { ThemeToggle } from "./theme";
 import { requestShowDownloadManager } from "./download-manager";
 import { useAppStore } from "@/lib/store";
+import type { LibvioViewRequest, LibvioViewState } from '@/lib/libvio';
 
 declare global {
   interface Window {
@@ -15,6 +16,8 @@ declare global {
       minimize: () => void;
       maximize: () => void;
       close: () => void;
+      libvio?: (request: { action: 'search' | 'detail' | 'resolve' | 'page' | 'test' | 'verify'; query?: string; id?: string; url?: string }) => Promise<{ html?: string; url?: string; error?: string }>;
+      libvioView?: (request: LibvioViewRequest) => Promise<LibvioViewState>;
     };
   }
 }

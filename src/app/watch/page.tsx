@@ -35,6 +35,9 @@ import {
   db,
 } from '@/lib/db';
 import { cn } from '@/lib/utils';
+import { isLibvioPlayUrl } from '@/lib/libvio';
+import { isProgressiveMedia } from '@/lib/media-format';
+import { LibvioPlayer } from '@/components/libvio-player';
 
 /**
  * 播放页（唯一入口，替代旧版 watch.html → player.html 跳转链）。
@@ -123,6 +126,8 @@ function WatchContent() {
     }
     return directUrl;
   }, [episodes, indexParam, directUrl]);
+  const webEpisode = isLibvioPlayUrl(currentUrl);
+  const playbackUrl = currentUrl;
 
   const currentIndex = useMemo(() => {
     if (episodes.length > 0) return Math.min(Math.max(indexParam, 0), episodes.length - 1);
@@ -134,7 +139,7 @@ function WatchContent() {
   const skipMarkFallback = `${sourceKey}:${vodId || currentUrl}`;
   const markKey = useMemo(
     () => skipMarkKey(videoTitle, skipMarkFallback),
-    [videoTitle, skipMarkFallback]
+    [videoTitle, skipMarkFallback],
   );
   const skipMark = store.skipMarks[markKey];
   const markedCount = skipMark?.segments.length ?? 0;
@@ -152,7 +157,7 @@ function WatchContent() {
       sp.delete('position');
       router.replace(`/watch?${sp.toString()}`, { scroll: false });
     },
-    [router, searchParams, episodes, directUrl]
+    [router, searchParams, episodes, directUrl],
   );
 
   // 进度恢复优先级：URL position 参数 > IndexedDB 记录
@@ -193,14 +198,17 @@ function WatchContent() {
         updateHistoryProgress(sourceKey, vodId || currentUrl, position, duration).catch(() => {});
       }
     },
-    [sourceKey, vodId, currentIndex, currentUrl]
+    [sourceKey, vodId, currentIndex, currentUrl],
   );
 
   // 自动连播的 800ms 延迟切集要在卸载时取消，避免离开页面后跳转
   const autoNextTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => () => {
-    if (autoNextTimer.current) clearTimeout(autoNextTimer.current);
-  }, []);
+  useEffect(
+    () => () => {
+      if (autoNextTimer.current) clearTimeout(autoNextTimer.current);
+    },
+    [],
+  );
 
   const handleEnded = useCallback(() => {
     if (vodId) clearProgress(sourceKey, vodId, currentIndex).catch(() => {});
@@ -221,7 +229,11 @@ function WatchContent() {
       }
       useAppStore.getState().setSkipMark(markKey, [...existing, segment]);
       const label =
-        segment.type === 'opening' ? '片头结束' : segment.type === 'ending' ? '片尾开始' : '中段片段';
+        segment.type === 'opening'
+          ? '片头结束'
+          : segment.type === 'ending'
+            ? '片尾开始'
+            : '中段片段';
       // 中段命中时的表现取决于全局「自动跳过片段」，记完就说清楚，避免"标了却没反应"
       const hint =
         segment.type === 'middle'
@@ -231,7 +243,7 @@ function WatchContent() {
           : '';
       toast(`已记录${label}${hint}`, 'success');
     },
-    [markKey, toast]
+    [markKey, toast],
   );
 
   // Alt+←/→ 集数切换快捷键
@@ -250,7 +262,9 @@ function WatchContent() {
     return () => document.removeEventListener('keydown', handler);
   }, [currentIndex, episodes.length, goEpisode]);
 
-  const orderedEpisodes = reversed ? [...episodes].map((_, i) => episodes.length - 1 - i) : episodes.map((_, i) => i);
+  const orderedEpisodes = reversed
+    ? [...episodes].map((_, i) => episodes.length - 1 - i)
+    : episodes.map((_, i) => i);
 
   if (!verified) {
     return (
@@ -268,7 +282,9 @@ function WatchContent() {
           <p className="text-sm text-muted mb-4">
             该视频来自点播源「{sourceKey}」，但它可能已被删除。请在设置中重新添加后重试。
           </p>
-          <Link href="/" className="btn-primary">返回首页</Link>
+          <Link href="/" className="btn-primary">
+            返回首页
+          </Link>
         </div>
       </div>
     );
@@ -288,12 +304,39 @@ function WatchContent() {
             </p>
           </div>
           <div className="ml-auto flex items-center gap-1.5 sm:gap-2 shrink-0">
+            {detailQuery.data?.playLines && (
+              <select
+                className="bg-chip border border-line rounded-lg px-2 py-1.5 text-xs"
+                aria-label="LIBVIO 播放线路"
+                value={detailQuery.data.activePlayLine}
+                onChange={(e) => {
+                  const p = new URLSearchParams(searchParams.toString());
+                  p.set('id', e.target.value);
+                  p.set('index', '0');
+                  p.delete('url');
+                  p.delete('position');
+                  router.replace(`/watch?${p}`, { scroll: false });
+                }}
+              >
+                {detailQuery.data.playLines.map((line) => (
+                  <option key={line.id} value={line.id}>
+                    {line.name}
+                  </option>
+                ))}
+              </select>
+            )}
             <button
               className="btn-ghost btn-sm"
+              disabled={!playbackUrl || webEpisode || isProgressiveMedia(playbackUrl)}
+              title={
+                webEpisode || isProgressiveMedia(playbackUrl)
+                  ? '此来源暂不支持应用内下载'
+                  : undefined
+              }
               onClick={() => {
-                if (!currentUrl) return;
+                if (!playbackUrl) return;
                 enqueueDownload({
-                  url: currentUrl,
+                  url: playbackUrl,
                   // 多集才带集数后缀；单集影片（含电影）文件名就是纯标题
                   title: `${videoTitle}${episodes.length > 1 ? ` 第${currentIndex + 1}集` : ''}`,
                   format: 'MP4',
@@ -318,9 +361,28 @@ function WatchContent() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-4">
           <div>
             <div ref={playerFrameRef} className="aspect-video bg-black rounded-lg overflow-hidden">
-              {currentUrl ? (
-                <PlayerShell
+              {webEpisode ? (
+                <LibvioPlayer
                   url={currentUrl}
+                  getRestorePosition={getRestorePosition}
+                  onProgress={handleProgress}
+                  onEnded={handleEnded}
+                  onQuality={(height) => {
+                    if (sourceKey && vodId)
+                      useAppStore
+                        .getState()
+                        .setQuality({
+                          [qualityKey(sourceKey, vodId)]: {
+                            height,
+                            from: 'play',
+                            timestamp: Date.now(),
+                          },
+                        });
+                  }}
+                />
+              ) : playbackUrl ? (
+                <PlayerShell
+                  url={playbackUrl}
                   title={videoTitle}
                   adFilter={store.adFilter}
                   autoplayNext={store.autoplayNext}
@@ -330,11 +392,22 @@ function WatchContent() {
                   miniProgressBar={store.miniProgressBar}
                   pendingStart={pendingStart}
                   onPendingStart={setPendingStart}
-                  onPlayerApi={(api) => { playerApiRef.current = api; }}
+                  onPlayerApi={(api) => {
+                    playerApiRef.current = api;
+                  }}
                   onRecordSegment={handleRecordSegment}
                   episodeKey={`${sourceKey}:${vodId}:${currentIndex}`}
-                  nextUrl={currentIndex + 1 < episodes.length ? episodes[currentIndex + 1] : undefined}
-                  nextEpisodeKey={currentIndex + 1 < episodes.length ? `${sourceKey}:${vodId}:${currentIndex + 1}` : undefined}
+                  nextUrl={
+                    currentIndex + 1 < episodes.length &&
+                    !isLibvioPlayUrl(episodes[currentIndex + 1])
+                      ? episodes[currentIndex + 1]
+                      : undefined
+                  }
+                  nextEpisodeKey={
+                    currentIndex + 1 < episodes.length
+                      ? `${sourceKey}:${vodId}:${currentIndex + 1}`
+                      : undefined
+                  }
                   getRestorePosition={getRestorePosition}
                   onTimeUpdate={handleProgress}
                   onPause={handleProgress}
@@ -347,7 +420,11 @@ function WatchContent() {
                     // 播放实测是最权威的画质来源，回写后搜索列表里该「源 + 影片」直接显示
                     if (!sourceKey || !vodId) return;
                     useAppStore.getState().setQuality({
-                      [qualityKey(sourceKey, vodId)]: { height, from: 'play', timestamp: Date.now() },
+                      [qualityKey(sourceKey, vodId)]: {
+                        height,
+                        from: 'play',
+                        timestamp: Date.now(),
+                      },
                     });
                   }}
                 />
@@ -382,6 +459,7 @@ function WatchContent() {
               </button>
               <button
                 className={cn('btn-ghost btn-sm', skipPanelOpen && 'bg-chip text-content')}
+                disabled={webEpisode}
                 aria-expanded={skipPanelOpen}
                 aria-haspopup="dialog"
                 onClick={() => setSkipPanelOpen((v) => !v)}
@@ -393,7 +471,10 @@ function WatchContent() {
               >
                 跳过标记{markedCount > 0 ? ` (${markedCount})` : ''}
                 {markedCount > 0 && skipMark?.enabled === false && (
-                  <span className="ml-1 inline-block size-1.5 rounded-full bg-faint" aria-label="本剧跳过已关闭" />
+                  <span
+                    className="ml-1 inline-block size-1.5 rounded-full bg-faint"
+                    aria-label="本剧跳过已关闭"
+                  />
                 )}
               </button>
               <label className="flex items-center gap-1.5 text-xs text-muted ml-auto cursor-pointer">
@@ -454,7 +535,10 @@ function WatchContent() {
               detailQuery.isLoading ? (
                 <LoadingState />
               ) : (
-                <EmptyState variant="plain" title={detailQuery.isError ? '获取剧集失败' : '暂无剧集信息'} />
+                <EmptyState
+                  variant="plain"
+                  title={detailQuery.isError ? '获取剧集失败' : '暂无剧集信息'}
+                />
               )
             ) : (
               <div className="grid grid-cols-6 sm:grid-cols-8 lg:grid-cols-4 gap-1.5 max-h-[65vh] overflow-y-auto scrollbar-thin pr-1">
@@ -469,7 +553,9 @@ function WatchContent() {
               </div>
             )}
             <p className="hidden md:block text-[10px] text-faint mt-3 leading-relaxed">
-              快捷键：空格 播放/暂停 · ←/→ 快退/快进 5s · ↑/↓ 音量 · F 全屏 · Alt+←/→ 切换集数
+              {webEpisode
+                ? 'LIBVIO 使用网站播放器控制播放、音量与全屏；在上方切换播放线路。'
+                : '快捷键：空格 播放/暂停 · ←/→ 快退/快进 5s · ↑/↓ 音量 · F 全屏 · Alt+←/→ 切换集数'}
             </p>
           </aside>
         </div>
@@ -489,7 +575,15 @@ function WatchContent() {
 }
 
 /** 集数按钮：激活时自动滚动进可视区（长剧列表） */
-function EpisodeButton({ index, active, onClick }: { index: number; active: boolean; onClick: () => void }) {
+function EpisodeButton({
+  index,
+  active,
+  onClick,
+}: {
+  index: number;
+  active: boolean;
+  onClick: () => void;
+}) {
   const ref = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {

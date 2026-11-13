@@ -1,6 +1,29 @@
 'use client';
 
-import type { SearchResponse, SearchStreamEvent, SourceSearchOutcome, VideoDetail, DoubanResponse, BangumiCalendarResponse, AuthStatusResponse, SourceConfig, SearchResultItem, LivePlaylistResponse, LiveEpgResponse, SourceListPayload, QualityProbeItem, QualityProbeResult } from './types';
+import type {
+  SearchResponse,
+  SearchStreamEvent,
+  SourceSearchOutcome,
+  VideoDetail,
+  DoubanResponse,
+  BangumiCalendarResponse,
+  AuthStatusResponse,
+  SourceConfig,
+  SearchResultItem,
+  LivePlaylistResponse,
+  LiveEpgResponse,
+  SourceListPayload,
+  QualityProbeItem,
+  QualityProbeResult,
+} from './types';
+import {
+  isLibvioSource,
+  isLibvioPlayUrl,
+  libvioRequest,
+  parseLibvioSearch,
+  parseLibvioDetail,
+} from './libvio';
+import { filterAdultResults, filterRelevantResults } from './cms-parser';
 
 /**
  * 客户端 API 封装。401 时触发全局事件打开登录框，
@@ -99,7 +122,9 @@ async function request<T>(url: string, init?: RequestInit): Promise<T> {
     try {
       const data = (await res.json()) as { error?: string };
       if (data?.error) msg = data.error;
-    } catch { /* 忽略解析失败 */ }
+    } catch {
+      /* 忽略解析失败 */
+    }
     throw new ApiError(msg, res.status);
   }
   return (await res.json()) as T;
@@ -126,10 +151,78 @@ export const api = {
     wd: string,
     sources: SourceConfig[],
     filterAdult: boolean,
-    opts?: { signal?: AbortSignal; onSource?: (outcome: SourceSearchOutcome) => void }
+    opts?: { signal?: AbortSignal; onSource?: (outcome: SourceSearchOutcome) => void },
   ): Promise<SearchResponse> => {
     const signal = opts?.signal;
     const onSource = opts?.onSource;
+    const webSources = sources.filter(isLibvioSource);
+    if (webSources.length) {
+      const others = sources.filter((s) => !isLibvioSource(s));
+      const normal =
+        others.length && !isLibvioPlayUrl(wd)
+          ? api.search(wd, others, filterAdult, opts)
+          : Promise.resolve({ list: [], failures: [] } as SearchResponse);
+      const webPromise = Promise.all(
+        webSources.map(async (source) => {
+          const start = performance.now();
+          let outcome: SourceSearchOutcome;
+          try {
+            let list: SearchResultItem[];
+            if (isLibvioPlayUrl(wd)) {
+              const parts = new URL(wd).pathname.match(/\/w\/(\d+)-(\d+)-\d+\.html$/)!;
+              const id = `${parts[1]}-${parts[2]}`;
+              const response = await libvioRequest({ action: 'detail', id }, signal);
+              const detail = parseLibvioDetail(response.html || '', source, id);
+              list = [
+                {
+                  sourceKey: source.key,
+                  sourceName: source.name,
+                  sourceUrl: source.url,
+                  vodId: id,
+                  name: detail.videoInfo.title || 'LIBVIO 影片',
+                  pic: detail.videoInfo.cover,
+                  year: detail.videoInfo.year,
+                  remarks: detail.videoInfo.remarks,
+                },
+              ];
+            } else {
+              const response = await libvioRequest({ action: 'search', query: wd }, signal);
+              list = filterRelevantResults(
+                filterAdultResults(parseLibvioSearch(response.html || '', source), filterAdult),
+                wd,
+              );
+            }
+            outcome = {
+              sourceKey: source.key,
+              ok: true,
+              list,
+              ms: Math.round(performance.now() - start),
+            };
+          } catch (err) {
+            if (signal?.aborted) throw err;
+            outcome = {
+              sourceKey: source.key,
+              ok: false,
+              list: [],
+              error: err instanceof Error ? err.message : 'LIBVIO 请求失败',
+              ms: Math.round(performance.now() - start),
+            };
+          }
+          onSource?.(outcome);
+          return outcome;
+        }),
+      );
+      const [web, result] = await Promise.all([webPromise, normal]);
+      return {
+        list: [...web.flatMap((o) => o.list), ...result.list],
+        failures: [
+          ...result.failures,
+          ...web
+            .filter((o) => !o.ok)
+            .map((o) => ({ sourceKey: o.sourceKey, error: o.error || 'LIBVIO 请求失败' })),
+        ],
+      };
+    }
     if (!onSource) {
       return request<SearchResponse>('/api/search', {
         method: 'POST',
@@ -142,8 +235,19 @@ export const api = {
   },
 
   detail: (id: string, source: SourceConfig, signal?: AbortSignal) => {
+    if (isLibvioSource(source))
+      return libvioRequest({ action: 'detail', id }, signal).then((response) =>
+        parseLibvioDetail(response.html || '', source, id),
+      );
     const sp = new URLSearchParams({ id, source: JSON.stringify(source) });
     return request<VideoDetail>(`/api/detail?${sp.toString()}`, { signal });
+  },
+
+  resolveEpisode: async (url: string, signal?: AbortSignal) => {
+    if (!isLibvioPlayUrl(url)) return url;
+    const result = await libvioRequest({ action: 'resolve', url }, signal);
+    if (!result.url) throw new Error('LIBVIO 未返回可播放地址');
+    return result.url;
   },
 
   /**
@@ -157,8 +261,16 @@ export const api = {
   qualityProbeStream: async (
     items: QualityProbeItem[],
     onResult: (result: QualityProbeResult) => void,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<void> => {
+    for (const item of items.filter((item) => isLibvioSource(item.source)))
+      onResult({
+        sourceKey: item.source.key,
+        vodId: item.id,
+        error: '网页源将在播放后记录实测分辨率',
+      });
+    items = items.filter((item) => !isLibvioSource(item.source));
+    if (!items.length) return;
     let res: Response;
     try {
       res = await fetch('/api/quality?stream=1', {
@@ -191,18 +303,30 @@ export const api = {
         firstByte
           ? '探测连接中途被断开（已收到部分结果，多为网关超时）'
           : '探测请求被网关拦截（未收到任何响应）',
-        0
+        0,
       );
     }
   },
 
-  douban: (type: 'movie' | 'tv', tag: string, pageStart: number, pageSize: number, signal?: AbortSignal) => {
-    const sp = new URLSearchParams({ type, tag, pageStart: String(pageStart), pageSize: String(pageSize) });
+  douban: (
+    type: 'movie' | 'tv',
+    tag: string,
+    pageStart: number,
+    pageSize: number,
+    signal?: AbortSignal,
+  ) => {
+    const sp = new URLSearchParams({
+      type,
+      tag,
+      pageStart: String(pageStart),
+      pageSize: String(pageSize),
+    });
     return request<DoubanResponse>(`/api/douban?${sp.toString()}`, { signal });
   },
 
   /** Bangumi 每日放送（免 key），首页推荐的另一数据源 */
-  bangumiCalendar: (signal?: AbortSignal) => request<BangumiCalendarResponse>('/api/bangumi/calendar', { signal }),
+  bangumiCalendar: (signal?: AbortSignal) =>
+    request<BangumiCalendarResponse>('/api/bangumi/calendar', { signal }),
 
   /** 影视热榜（60s API 免 key）：豆瓣周榜五个类目 + 百度热播剧 */
   hotList: (id: string, signal?: AbortSignal) => {
@@ -217,17 +341,44 @@ export const api = {
       const detail = await api.detail(id, source, signal);
       return { ok: true, ms: Math.round(performance.now() - start), detail };
     } catch (err) {
-      return { ok: false, ms: Math.round(performance.now() - start), detail: undefined as VideoDetail | undefined, error: err instanceof Error ? err.message : '失败' };
+      return {
+        ok: false,
+        ms: Math.round(performance.now() - start),
+        detail: undefined as VideoDetail | undefined,
+        error: err instanceof Error ? err.message : '失败',
+      };
     }
   },
 
   /** 点播源探活：以搜索 "test" 的耗时与结果量衡量可用性 */
-  testSource: (url: string) =>
-    request<{ ok: boolean; ms: number; count?: number; error?: string }>('/api/source/test', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url }),
-    }),
+  testSource: async (url: string) => {
+    if (isLibvioSource({ url })) {
+      const start = performance.now();
+      try {
+        const result = await libvioRequest({ action: 'test' });
+        return {
+          ok: true,
+          ms: Math.round(performance.now() - start),
+          count: parseLibvioSearch(result.html || '', { key: 'libvio', name: 'LIBVIO', url })
+            .length,
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          ms: Math.round(performance.now() - start),
+          error: err instanceof Error ? err.message : 'LIBVIO 无法访问',
+        };
+      }
+    }
+    return request<{ ok: boolean; ms: number; count?: number; error?: string }>(
+      '/api/source/test',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url }),
+      },
+    );
+  },
 
   /** 拉取远程数据源订阅（自动识别 LibreTV-SourceList JSON 与 TVBOX 配置 JSON） */
   fetchSourceList: (url: string) => {
@@ -241,11 +392,14 @@ export const api = {
     sources: { name: string; url: string }[];
     liveSources: { name: string; url: string; epg?: string }[];
   }) =>
-    request<{ url: string; provider: string; sources: number; liveSources: number }>('/api/publish', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    }),
+    request<{ url: string; provider: string; sources: number; liveSources: number }>(
+      '/api/publish',
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      },
+    ),
 
   /** —— 直播 / IPTV —— */
 
@@ -268,9 +422,19 @@ export const api = {
     const start = performance.now();
     try {
       const playlist = await api.livePlaylist(url, true);
-      return { ok: true, ms: Math.round(performance.now() - start), count: playlist.channels.length, error: undefined as string | undefined };
+      return {
+        ok: true,
+        ms: Math.round(performance.now() - start),
+        count: playlist.channels.length,
+        error: undefined as string | undefined,
+      };
     } catch (err) {
-      return { ok: false, ms: Math.round(performance.now() - start), count: 0, error: err instanceof Error ? err.message : '失败' };
+      return {
+        ok: false,
+        ms: Math.round(performance.now() - start),
+        count: 0,
+        error: err instanceof Error ? err.message : '失败',
+      };
     }
   },
 
@@ -282,15 +446,12 @@ export const api = {
 
   /** 批量测活：分片级探测频道可达性与延迟（单批最多 50 条） */
   liveProbe: (urls: string[], signal?: AbortSignal) =>
-    request<{ results: LiveProbeResult[] }>(
-      '/api/live/probe',
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ urls }),
-        signal,
-      }
-    ),
+    request<{ results: LiveProbeResult[] }>('/api/live/probe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ urls }),
+      signal,
+    }),
 
   /**
    * 流式测活：服务端以 NDJSON 逐条推送（命中缓存的立即返回），
@@ -299,7 +460,7 @@ export const api = {
   liveProbeStream: async (
     urls: string[],
     onResult: (result: LiveProbeResult) => void,
-    signal?: AbortSignal
+    signal?: AbortSignal,
   ): Promise<void> => {
     const res = await fetch('/api/live/probe?stream=1', {
       method: 'POST',
@@ -326,7 +487,7 @@ async function searchStream(
   sources: SourceConfig[],
   filterAdult: boolean,
   onSource: (outcome: SourceSearchOutcome) => void,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ): Promise<SearchResponse> {
   const res = await fetch('/api/search?stream=1', {
     method: 'POST',
@@ -334,19 +495,19 @@ async function searchStream(
     body: JSON.stringify({ wd, sources, filterAdult }),
     signal,
   });
-    throwForAuthStatus(res);
-    if (!res.ok || !res.body) throw new ApiError(`请求失败 (${res.status})`, res.status);
+  throwForAuthStatus(res);
+  if (!res.ok || !res.body) throw new ApiError(`请求失败 (${res.status})`, res.status);
 
-    // done 事件缺失（流被截断）时退化为空结果，不让整次搜索报错
-    let final: SearchResponse = { list: [], failures: [] };
-    await consumeNdjson<SearchStreamEvent>(res, (event) => {
-      if (event.type === 'source') {
-        onSource(event);
-      } else if (event.type === 'done') {
-        final = { list: event.list, failures: event.failures };
-      }
-    });
-    return final;
-  }
+  // done 事件缺失（流被截断）时退化为空结果，不让整次搜索报错
+  let final: SearchResponse = { list: [], failures: [] };
+  await consumeNdjson<SearchStreamEvent>(res, (event) => {
+    if (event.type === 'source') {
+      onSource(event);
+    } else if (event.type === 'done') {
+      final = { list: event.list, failures: event.failures };
+    }
+  });
+  return final;
+}
 
 export type { SearchResponse, SearchResultItem };

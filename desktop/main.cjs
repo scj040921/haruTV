@@ -201,6 +201,18 @@ else {
     const trusted = (e) =>
       e.sender === win?.webContents &&
       e.senderFrame?.url.startsWith(origin + "/");
+    const libvio = require('./libvio.cjs').createLibvio();
+    ipcMain.handle('haru:libvio', async (event, request) => {
+      if (!trusted(event)) return { error: '请求来源不受信任' };
+      try { return await libvio.request(request); }
+      catch (err) { return { error: err.message || 'LIBVIO 请求失败' }; }
+    });
+    ipcMain.handle('haru:libvio-view', async (event, request) => {
+      if (!trusted(event)) return { error: '请求来源不受信任' };
+      try { return await libvio.view(win, request); }
+      catch (err) { return { error: err.message || 'LIBVIO 播放器操作失败' }; }
+    });
+    win.on('closed', () => libvio.close());
     ipcMain.on("haru:minimize", (e) => {
       if (trusted(e)) win.minimize();
     });

@@ -1,6 +1,6 @@
 {
   "name": "harutv",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "private": true,
   "description": "haruTV — 留一点时间，给好故事",
   "license": "AGPL-3.0-or-later",
@@ -42,6 +42,7 @@
     "electron-builder": "^26.18.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^15.5.25",
+    "linkedom": "^0.18.15",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "typescript": "^5.7.2",

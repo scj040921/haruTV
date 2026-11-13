@@ -6,15 +6,13 @@ import Hls, { type HlsConfig } from 'hls.js';
 
 import { PlaybackRecovery, describeHlsError } from '@/lib/playback-recovery';
 import { createHlsLoader } from '@/lib/hls-loader';
-import {
-  getVideoPrefetcher,
-  getNextEpisodePrefetcher,
-} from '@/lib/video-prefetcher';
+import { getVideoPrefetcher, getNextEpisodePrefetcher } from '@/lib/video-prefetcher';
 import { attachVolumeBoost, type VolumeBoostHandle } from '@/lib/volume-boost';
 import { CONTROL_SHOW_CLASS, syncMiniProgressBar } from '@/lib/mini-progress-bar';
 import { loadCacheSettings } from '@/lib/video-cache';
 import { formatTime } from '@/lib/utils';
 import { prefersTouchPointer } from '@/lib/touch-pointer';
+import { isProgressiveMedia } from '@/lib/media-format';
 import {
   findActiveSegment,
   findCrossedEnding,
@@ -151,18 +149,58 @@ export function PlayerShell({
 
   // 始终持有最新 props/回调，避免重建播放器
   const propsRef = useRef({
-    url, title, adFilter, autoplayNext, skipMark, autoSkipSegments, volumeBoost, miniProgressBar,
-    pendingStart, onPendingStart, onPlayerApi, onRecordSegment,
-    episodeKey, nextUrl, nextEpisodeKey,
-    getRestorePosition, onTimeUpdate, onEnded, onPause, onQuality, onRequestSwitchSource,
-    onPrevEpisode, onNextEpisode, hasPrevEpisode, hasNextEpisode,
+    url,
+    title,
+    adFilter,
+    autoplayNext,
+    skipMark,
+    autoSkipSegments,
+    volumeBoost,
+    miniProgressBar,
+    pendingStart,
+    onPendingStart,
+    onPlayerApi,
+    onRecordSegment,
+    episodeKey,
+    nextUrl,
+    nextEpisodeKey,
+    getRestorePosition,
+    onTimeUpdate,
+    onEnded,
+    onPause,
+    onQuality,
+    onRequestSwitchSource,
+    onPrevEpisode,
+    onNextEpisode,
+    hasPrevEpisode,
+    hasNextEpisode,
   });
   propsRef.current = {
-    url, title, adFilter, autoplayNext, skipMark, autoSkipSegments, volumeBoost, miniProgressBar,
-    pendingStart, onPendingStart, onPlayerApi, onRecordSegment,
-    episodeKey, nextUrl, nextEpisodeKey,
-    getRestorePosition, onTimeUpdate, onEnded, onPause, onQuality, onRequestSwitchSource,
-    onPrevEpisode, onNextEpisode, hasPrevEpisode, hasNextEpisode,
+    url,
+    title,
+    adFilter,
+    autoplayNext,
+    skipMark,
+    autoSkipSegments,
+    volumeBoost,
+    miniProgressBar,
+    pendingStart,
+    onPendingStart,
+    onPlayerApi,
+    onRecordSegment,
+    episodeKey,
+    nextUrl,
+    nextEpisodeKey,
+    getRestorePosition,
+    onTimeUpdate,
+    onEnded,
+    onPause,
+    onQuality,
+    onRequestSwitchSource,
+    onPrevEpisode,
+    onNextEpisode,
+    hasPrevEpisode,
+    hasNextEpisode,
   };
 
   /** 上报实测画质：多次上报取大值由调用方决定，这里只管把拿到的高度传出去 */
@@ -235,6 +273,7 @@ export function PlayerShell({
 
   // 当前集预取（episodeKey 缺省 = 关闭，见 ensure 内部 settings.enabled 判断）
   const ensurePrefetch = (mediaUrl: string, currentTime: number, horizonSeconds?: number) => {
+    if (isProgressiveMedia(mediaUrl)) return;
     const p = propsRef.current;
     if (!p.episodeKey) return;
     getVideoPrefetcher().ensure({
@@ -364,8 +403,7 @@ export function PlayerShell({
     restoreCleanupRef.current = null;
     hlsRef.current?.destroy();
     currentMediaUrlRef.current = mediaUrl;
-    const hls = new Hls(buildHlsConfig());
-    hlsRef.current = hls;
+    hlsRef.current = null;
 
     let restoreInFlight = false;
     const restoreAndStart = async () => {
@@ -399,12 +437,25 @@ export function PlayerShell({
     };
 
     const restoreEvents = ['loadedmetadata', 'durationchange', 'canplay'] as const;
-    const onRestoreEvent = () => { void restoreAndStart(); };
+    const onRestoreEvent = () => {
+      void restoreAndStart();
+    };
     restoreEvents.forEach((event) => video.addEventListener(event, onRestoreEvent));
     restoreCleanupRef.current = () => {
       restoreEvents.forEach((event) => video.removeEventListener(event, onRestoreEvent));
     };
 
+    if (isProgressiveMedia(mediaUrl)) {
+      // Plain video playback does not require CORS. Several legitimate MP4
+      // CDNs intentionally omit ACAO; requesting anonymous CORS breaks them.
+      if (!mediaUrl.startsWith('/api/proxy')) video.removeAttribute('crossorigin');
+      video.src = mediaUrl;
+      video.load();
+      return;
+    }
+    video.crossOrigin = 'anonymous';
+    const hls = new Hls(buildHlsConfig());
+    hlsRef.current = hls;
     hls.loadSource(mediaUrl);
     hls.attachMedia(video);
 
@@ -528,12 +579,12 @@ export function PlayerShell({
     const art = new Artplayer({
       container: containerRef.current,
       url: initialUrl,
-      type: 'm3u8',
+      type: isProgressiveMedia(initialUrl) ? 'mp4' : 'm3u8',
       volume: 0.8,
       autoplay: true,
       pip: true,
       autoMini: true,
-      screenshot: true,
+      screenshot: !isProgressiveMedia(initialUrl),
       setting: true,
       playbackRate: true,
       aspectRatio: true,
@@ -552,7 +603,10 @@ export function PlayerShell({
       hotkey: false,
       theme: '#2563eb',
       lang: navigator.language.toLowerCase().startsWith('zh') ? 'zh-cn' : 'en',
-      moreVideoAttr: { crossOrigin: 'anonymous', playsInline: true },
+      moreVideoAttr: {
+        crossOrigin: isProgressiveMedia(initialUrl) ? undefined : 'anonymous',
+        playsInline: true,
+      },
       // 上/下集放在播放键右侧：换集是看剧最高频的动作，不该让用户滚回页面下方找按钮
       controls: [
         {
@@ -577,6 +631,7 @@ export function PlayerShell({
         },
       ],
       customType: {
+        mp4: (video: HTMLVideoElement, mediaUrl: string) => setupHls(video, mediaUrl, true),
         m3u8: (video: HTMLVideoElement, mediaUrl: string) => {
           setupHls(video, mediaUrl, true);
         },
@@ -589,6 +644,12 @@ export function PlayerShell({
     // 纯附加：不改动 ArtPlayer 的 volume/滑块/快捷键；失败时原样播放。
     art.on('video:playing', () => {
       if (!propsRef.current.volumeBoost) return;
+      if (
+        isProgressiveMedia(currentMediaUrlRef.current) &&
+        !art.video.crossOrigin &&
+        !currentMediaUrlRef.current.startsWith('/api/proxy')
+      )
+        return;
       if (!volumeBoostRef.current) {
         volumeBoostRef.current = attachVolumeBoost(art.video);
       }
@@ -681,7 +742,9 @@ export function PlayerShell({
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (art as any).title = propsRef.current.title;
-      } catch { /* 忽略 */ }
+      } catch {
+        /* 忽略 */
+      }
     });
 
     art.on('video:playing', () => {
@@ -699,7 +762,14 @@ export function PlayerShell({
       if (!playbackStartedRef.current && !videoErrorRetryUsedRef.current) {
         videoErrorRetryUsedRef.current = true;
         showHint('播放异常，正在重试...');
-        setupHls(art.video, currentMediaUrlRef.current, true);
+        const media = currentMediaUrlRef.current;
+        setupHls(
+          art.video,
+          isProgressiveMedia(media) && !media.startsWith('/api/proxy')
+            ? `/api/proxy?url=${encodeURIComponent(media)}`
+            : media,
+          false,
+        );
         return;
       }
       setError('视频播放失败，请尝试其他视频源');
@@ -736,7 +806,7 @@ export function PlayerShell({
         findCrossedEnding(segments, previous, current)
       ) {
         const ending = segments.find(
-          (s) => s.type === 'ending' && previous < s.start && current >= s.start
+          (s) => s.type === 'ending' && previous < s.start && current >= s.start,
         );
         finishBySkip(ending);
         return;
@@ -762,8 +832,7 @@ export function PlayerShell({
       }
 
       // 按钮提示：当前落在某个未处理片段内（结尾片段显示「跳过片尾」）
-      const prompt =
-        active && !handledSegmentsRef.current.has(segmentKey(active)) ? active : null;
+      const prompt = active && !handledSegmentsRef.current.has(segmentKey(active)) ? active : null;
       updateSkipPrompt(prompt);
     });
     art.on('video:seeked', () => {
@@ -774,8 +843,7 @@ export function PlayerShell({
       lastSampleRef.current = current;
       const segments = resolveSegments(propsRef.current.skipMark, art.duration);
       const active = findActiveSegment(segments, current);
-      const prompt =
-        active && !handledSegmentsRef.current.has(segmentKey(active)) ? active : null;
+      const prompt = active && !handledSegmentsRef.current.has(segmentKey(active)) ? active : null;
       updateSkipPrompt(prompt);
     });
     art.on('video:pause', () => {
@@ -805,33 +873,61 @@ export function PlayerShell({
     const shortcuts = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement;
       // 输入框或按钮获得焦点时不劫持按键：否则空格会吞掉按钮的默认激活
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('button')) return;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.closest('button'))
+        return;
       const current = artRef.current;
       if (!current) return;
-      if (e.altKey && e.key === 'ArrowLeft') { e.preventDefault(); return; } // 由父层处理集数切换
-      if (e.altKey && e.key === 'ArrowRight') { e.preventDefault(); return; }
+      if (e.altKey && e.key === 'ArrowLeft') {
+        e.preventDefault();
+        return;
+      } // 由父层处理集数切换
+      if (e.altKey && e.key === 'ArrowRight') {
+        e.preventDefault();
+        return;
+      }
       switch (e.key) {
         case 'ArrowLeft':
-          if (current.currentTime > 5) { current.currentTime -= 5; showHint('快退 5s'); e.preventDefault(); }
+          if (current.currentTime > 5) {
+            current.currentTime -= 5;
+            showHint('快退 5s');
+            e.preventDefault();
+          }
           break;
         case 'ArrowRight':
-          if (current.duration - current.currentTime > 5) { current.currentTime += 5; showHint('快进 5s'); e.preventDefault(); }
+          if (current.duration - current.currentTime > 5) {
+            current.currentTime += 5;
+            showHint('快进 5s');
+            e.preventDefault();
+          }
           break;
         case 'ArrowUp':
-          if (current.volume < 1) { current.volume = Math.min(1, current.volume + 0.1); showHint(`音量 ${Math.round(current.volume * 100)}%`); e.preventDefault(); }
+          if (current.volume < 1) {
+            current.volume = Math.min(1, current.volume + 0.1);
+            showHint(`音量 ${Math.round(current.volume * 100)}%`);
+            e.preventDefault();
+          }
           break;
         case 'ArrowDown':
-          if (current.volume > 0) { current.volume = Math.max(0, current.volume - 0.1); showHint(`音量 ${Math.round(current.volume * 100)}%`); e.preventDefault(); }
+          if (current.volume > 0) {
+            current.volume = Math.max(0, current.volume - 0.1);
+            showHint(`音量 ${Math.round(current.volume * 100)}%`);
+            e.preventDefault();
+          }
           break;
         case ' ':
-          current.toggle(); showHint('播放/暂停'); e.preventDefault();
+          current.toggle();
+          showHint('播放/暂停');
+          e.preventDefault();
           break;
-        case 'f': case 'F':
-          current.fullscreen = !current.fullscreen; e.preventDefault();
+        case 'f':
+        case 'F':
+          current.fullscreen = !current.fullscreen;
+          e.preventDefault();
           break;
         // 标记类快捷键一律要求 Shift：这几键会直接写盘并影响整部剧，
         // 单键太容易误触（误记片头 = 之后每集都被跳过一大段）
-        case 'i': case 'I':
+        case 'i':
+        case 'I':
           if (!e.shiftKey) break;
           propsRef.current.onRecordSegment?.({
             type: 'opening',
@@ -840,7 +936,8 @@ export function PlayerShell({
           });
           e.preventDefault();
           break;
-        case 'o': case 'O':
+        case 'o':
+        case 'O':
           if (!e.shiftKey) break;
           propsRef.current.onRecordSegment?.({
             type: 'ending',
@@ -849,13 +946,15 @@ export function PlayerShell({
           });
           e.preventDefault();
           break;
-        case 's': case 'S':
+        case 's':
+        case 'S':
           if (!e.shiftKey) break;
           propsRef.current.onPendingStart(round1(current.currentTime));
           showHint('片段起点已记录，播放到终点后按 Shift+E');
           e.preventDefault();
           break;
-        case 'e': case 'E': {
+        case 'e':
+        case 'E': {
           if (!e.shiftKey) break;
           const start = propsRef.current.pendingStart;
           if (start === null) {
@@ -918,7 +1017,10 @@ export function PlayerShell({
       }, 500);
     };
     const onTouchEnd = () => {
-      if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+      if (longPressTimer) {
+        clearTimeout(longPressTimer);
+        longPressTimer = null;
+      }
       if (isLongPress) {
         art.video.playbackRate = originalRate;
         isLongPress = false;
@@ -951,7 +1053,9 @@ export function PlayerShell({
       if (!endedRef.current) {
         try {
           propsRef.current.onPause?.(art.currentTime, art.duration);
-        } catch { /* 忽略 */ }
+        } catch {
+          /* 忽略 */
+        }
       }
       document.removeEventListener('keydown', shortcuts);
       document.removeEventListener('visibilitychange', saveOnHide);
@@ -1018,11 +1122,17 @@ export function PlayerShell({
     if (!controls) return;
     controls.update({
       name: 'prev-episode',
-      style: { opacity: hasPrevEpisode ? '1' : '0.4', pointerEvents: hasPrevEpisode ? 'auto' : 'none' },
+      style: {
+        opacity: hasPrevEpisode ? '1' : '0.4',
+        pointerEvents: hasPrevEpisode ? 'auto' : 'none',
+      },
     });
     controls.update({
       name: 'next-episode',
-      style: { opacity: hasNextEpisode ? '1' : '0.4', pointerEvents: hasNextEpisode ? 'auto' : 'none' },
+      style: {
+        opacity: hasNextEpisode ? '1' : '0.4',
+        pointerEvents: hasNextEpisode ? 'auto' : 'none',
+      },
     });
   }, [hasPrevEpisode, hasNextEpisode, url]);
 
@@ -1037,8 +1147,7 @@ export function PlayerShell({
     lastSampleRef.current = Number.isFinite(current) ? current : 0;
     const segments = resolveSegments(skipMark, art.duration);
     const active = findActiveSegment(segments, current);
-    const prompt =
-      active && !handledSegmentsRef.current.has(segmentKey(active)) ? active : null;
+    const prompt = active && !handledSegmentsRef.current.has(segmentKey(active)) ? active : null;
     updateSkipPrompt(prompt);
     renderSkipMarks();
   }, [skipMark]);
@@ -1047,7 +1156,10 @@ export function PlayerShell({
   const firstUrlRef = useRef(true);
   useEffect(() => {
     // 挂载时的首次由创建 effect 的 customType 触发，跳过避免重复加载
-    if (firstUrlRef.current) { firstUrlRef.current = false; return; }
+    if (firstUrlRef.current) {
+      firstUrlRef.current = false;
+      return;
+    }
     loadEpisode(url);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url]);
@@ -1055,7 +1167,10 @@ export function PlayerShell({
   // —— 广告过滤开关变化：重建 HLS loader（无需重建整个播放器） ——
   const firstAdFilterRef = useRef(true);
   useEffect(() => {
-    if (firstAdFilterRef.current) { firstAdFilterRef.current = false; return; }
+    if (firstAdFilterRef.current) {
+      firstAdFilterRef.current = false;
+      return;
+    }
     if (artRef.current && hlsRef.current) {
       // 用当前实际媒体地址：代理回退生效时切广告过滤不应跳回直连形式
       loadEpisode(currentMediaUrlRef.current || propsRef.current.url);
