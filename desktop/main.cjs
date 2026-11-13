@@ -202,6 +202,15 @@ else {
       e.sender === win?.webContents &&
       e.senderFrame?.url.startsWith(origin + "/");
     const libvio = require('./libvio.cjs').createLibvio();
+    // A document reload does not run React effect cleanup. Release the native
+    // player before replacing the app document so it cannot keep playing above it.
+    win.webContents.on('did-start-navigation', (details) => {
+      if (details.isMainFrame && !details.isSameDocument)
+        void libvio.view(win, { action: 'close' }).catch(() => {});
+    });
+    win.webContents.on('render-process-gone', () => {
+      void libvio.view(win, { action: 'close' }).catch(() => {});
+    });
     ipcMain.handle('haru:libvio', async (event, request) => {
       if (!trusted(event)) return { error: '请求来源不受信任' };
       try { return await libvio.request(request); }
